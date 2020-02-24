@@ -1,0 +1,77 @@
+#trying the N-Queen problem
+
+def safe_position(board, q_loc):
+    dim = len(board)
+    #check horizontal attack first
+    for i in range(dim):
+        if i == q_loc[0]:
+            pass
+        elif board[i][q_loc[1]] == 1:
+            return False
+
+        #check out dem verts
+        if i == q_loc[1]:
+            pass
+        elif board[q_loc[0]][i] == 1:
+            return False
+
+        #check diagonals to down
+        if q_loc[0]+i < dim:
+            #diagonal down to right
+            if q_loc[1] + i < dim:
+                if board[q_loc[0]+i][q_loc[1]+i] == 1:
+                    return False
+            #diagonal down to left
+            if q_loc[1] - i >= 0:
+                if board[q_loc[0]+i][q_loc[1]-i] == 1:
+                    return False
+
+        #check diagonals above
+        if q_loc[0]-i >= 0:
+            #diagonal above to right
+            if q_loc[1] + i < dim:
+                if board[q_loc[0]-i][q_loc[1]+i] == 1:
+                    return False
+            #diagonal above to left
+            if q_loc[1] - i >= 0:
+                if board[q_loc[0]-i][q_loc[1]-i] == 1:
+                    return False
+    #valid placement
+    return True
+
+
+
+#board is an array of array NxN
+#N is the number of queens
+def find_queens_real(board, N):
+    if N ==0:
+        return True
+    else:
+        #the number of possible locations
+        i = 0
+        while i < len(board):
+            j = 0
+            while j < len(board):
+                #start at 0,0 go to 0,1... 0,M
+                #then 1,0.... 1,M
+                #M,0.... M,M
+                position = [i,j]
+                if safe_position(board, position):
+                    board[i][j] = 1
+                    if find_queens_real(board,N-1):
+                        print(board)
+                        return True
+                    board[i][j] = 0
+                j+=1
+            i+=1
+
+    #no valid answers
+    return False
+
+def start_finder(board_size, num_queens):
+    board = []
+    for i in range(board_size):
+        board.append([0]*board_size)
+    find_queens_real(board,num_queens)
+
+start_finder(6,6)
